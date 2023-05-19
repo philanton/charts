@@ -1,0 +1,5 @@
+apiVersion: v2
+name: rbac
+description: A Helm chart for K8s RBAC management
+type: application
+version: 0.1.0

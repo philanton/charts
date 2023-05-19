@@ -1,0 +1,12 @@
+{{- if semverCompare ">=1.24-0" .Capabilities.KubeVersion.Version }}
+{{- range $user := .Values.users }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $user.name }}-token
+  annotations:
+    kubernetes.io/service-account.name: {{ $user.name }}
+type: kubernetes.io/service-account-token
+{{- end }}
+{{- end }}

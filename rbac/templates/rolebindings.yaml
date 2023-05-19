@@ -1,0 +1,32 @@
+{{- $users := .Values.users }}
+{{- range $namespaceRole := .Values.roles.namespace }}
+{{- range $ns := $.Values.namespaces }}
+{{- $role := printf "%s-%s" $ns $namespaceRole.name }}
+
+{{- $userNames := list }}
+{{- range $user := $users }}
+  {{- if has $role $user.roles }}
+  {{- $userNames = append $userNames $user.name }}
+  {{- end }}
+{{- end }}
+
+{{- if gt (len $userNames) 0 }}
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ printf "%s-binding" $role }}
+  namespace: {{ $ns }}
+subjects:
+  {{- range $userName := $userNames }}
+  - kind: User
+    name: {{ printf "system:serviceaccount:default:%s" $userName }}
+    apiGroup: rbac.authorization.k8s.io
+  {{- end }}
+roleRef:
+  kind: Role
+  name: {{ $role}}
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- end }}
+{{- end }}

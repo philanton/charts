@@ -1,0 +1,38 @@
+roles:
+  cluster:
+    - cluster-admin
+    - cluster-view
+    - log-reader
+  namespace:
+    - name: viewer
+      rules:
+        - apiGroups: [""]
+          resources:
+            - pods
+            - pods/log
+            - configmaps
+            - endpoints
+            - events
+            - persistentvolumes
+            - persistentvolumeclaims
+            - services
+            - serviceaccounts
+          verbs: ["get", "list", "watch"]
+        - apiGroups: [""]
+          resources: ["secrets"]
+          verbs: ["list", "watch"]
+        - apiGroups: ["apps"]
+          resources: ["deployments", "statefulsets", "daemonsets", "replicasets"]
+          verbs: ["get", "list", "watch"]
+        - apiGroups: ["cert-manager.io"]
+          resources:
+          - certificaterequests
+          - certificates
+          - clusterissuers
+          - issuers
+          verbs: ["get", "list", "watch"]
+    - name: admin
+      rules:
+        - apiGroups: ["*"]
+          resources: ["*"]
+          verbs: ["*"]

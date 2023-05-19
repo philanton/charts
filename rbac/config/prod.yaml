@@ -1,0 +1,10 @@
+namespaces:
+  - ynet-v2-prod
+
+users:
+  - name: phil
+    roles:
+      - cluster-admin
+  - name: ynet-ci
+    roles:
+      - ynet-v2-prod-admin
