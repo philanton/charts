@@ -1,5 +1,8 @@
 namespaces:
   - ynet-v2-prod
+  - terminal-prod
+  - kayen-prod
+  - core
 
 users:
   - name: phil
@@ -8,3 +11,19 @@ users:
   - name: ynet-ci
     roles:
       - ynet-v2-prod-admin
+  - name: kayen-ci
+    roles:
+      - terminal-prod-admin
+      - kayen-prod-admin
+      - svc-reader
+  - name: mnaichuk
+    roles:
+      - terminal-prod-admin
+      - kayen-prod-admin
+      - cluster-view
+  - name: dsteblyna
+    roles:
+      - kayen-prod-viewer
+  - name: maxpushka
+    roles:
+      - cluster-admin

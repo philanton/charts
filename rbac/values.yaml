@@ -3,6 +3,7 @@ roles:
     - cluster-admin
     - cluster-view
     - log-reader
+    - svc-reader
   namespace:
     - name: viewer
       rules:
@@ -31,6 +32,14 @@ roles:
           - clusterissuers
           - issuers
           verbs: ["get", "list", "watch"]
+        - apiGroups: ["metrics.k8s.io"]
+          resources: ["pods"]
+          verbs: ["get", "list", "watch"]
+    - name: port-forwarder
+      rules:
+        - apiGroups: [""]
+          resources: ["pods", "pods/portforward"]
+          verbs: ["get", "list", "create"]
     - name: admin
       rules:
         - apiGroups: ["*"]
