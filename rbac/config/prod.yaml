@@ -27,3 +27,7 @@ users:
   - name: maxpushka
     roles:
       - cluster-admin
+  - name: pprof-exporter
+    namespace: terminal-prod
+    roles:
+      - metrics-reader
