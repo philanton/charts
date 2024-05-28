@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "component.fullname" . }}
+  labels:
+    {{- include "component.labels" . | nindent 4 }}
+spec:
+  {{- include "component.replicaCount" . | nindent 2 }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "component.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- include "component.metricsAnnotations" .Values.metrics | nindent 8 }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+      labels:
+        {{- include "component.selectorLabels" . | nindent 8 }}
+        {{- if .Values.extraLabels }}
+          {{- toYaml .Values.extraLabels | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - name: clearport
+          image: {{ include "component.image" .Values.image }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["./monitor.sh"]
+          env:
+            - name: name
+              value: value
+          {{- if or .Values.secrets .Values.externalSecret }}
+          envFrom:
+          {{- if .Values.secrets }}
+            - secretRef:
+                name: {{ include "component.fullname" . }}-opt-env
+          {{- end }}
+          {{- if .Values.externalSecret }}
+            - secretRef:
+                name: {{ .Values.externalSecret }}
+          {{- end }}
+          {{- end }}
+          {{- include "component.resources" . | nindent 10 }}
+      {{- include "component.imagePullSecrets" . | nindent 6 }}
+      {{- include "component.nodeSelectorLabels" . | nindent 6 }}
+      {{- include "component.affinity" . | nindent 6 }}
+      {{- include "component.tolerations" . | nindent 6 }}

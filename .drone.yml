@@ -1,0 +1,29 @@
+---
+kind: pipeline
+type: docker
+name: "Build"
+
+steps:
+  - name: Save Git Tag
+    image: alpine:3
+    pull: if-not-exists
+    commands:
+      - echo '${DRONE_TAG}' > .tags
+
+  - name: Docker Build
+    image: plugins/docker
+    pull: if-not-exists
+    settings:
+      username:
+        from_secret: quay_username
+      password:
+        from_secret: quay_password
+      repo: quay.io/openware/pprof-exporter
+      dockerfile: pprof-exporter/Dockerfile
+      context: pprof-exporter
+      registry: quay.io
+      purge: true
+
+trigger:
+  event:
+    - tag
